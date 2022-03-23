@@ -1,0 +1,42 @@
+version: '3.8'
+services:
+
+  server:
+    depends_on:
+      - database
+    build:
+      context: ./server
+    volumes:
+      - ./server:/server
+    ports:
+      - 3001:3001
+    environment:
+      PORT: 3001
+      POSTGRES_HOST: database
+      POSTGRES_DATABASE: enpicom
+      POSTGRES_USER: enpicom
+      POSTGRES_PASSWORD: enpicom
+
+  client:
+    depends_on:
+      - server
+    build:
+      context: ./client
+    volumes:
+      - ./client:/client
+    ports:
+      - 3000:3000
+
+  database:
+    image: postgres:13-alpine
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DATABASE: enpicom
+      POSTGRES_USER: enpicom
+      POSTGRES_PASSWORD: enpicom
+    volumes:
+        - db-data:/var/lib/postgresql/data
+
+volumes:
+    db-data:
