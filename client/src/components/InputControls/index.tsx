@@ -149,7 +149,7 @@ const InputControls = () => {
         // Insert the search results into the context;
         setResult(result);
       })
-      .catch((e) => {
+      .catch((_) => {
         // Set local state in error state
         setInputState((prev) => ({
           ...prev,

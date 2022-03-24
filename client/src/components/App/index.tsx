@@ -3,11 +3,11 @@ import styled from "styled-components";
 import SearchInput from "../InputControls";
 import SearchResults from "../DnaResults";
 import pattern from "../../assets/pattern.svg";
-import { DNAObject } from "../../api/dna";
+import { DNARow } from "../../api/dna";
 
 interface DnaResultContext {
-  result: Array<DNAObject>;
-  setResult: (r: Array<DNAObject>) => void;
+  result: Array<DNARow>;
+  setResult: (r: Array<DNARow>) => void;
 }
 
 const Page = styled.div`
@@ -43,9 +43,9 @@ export const DnaContext = React.createContext<DnaResultContext>({
  *  Main App component
  */
 const App = () => {
-  const [searchResult, setSearchResult] = useState<Array<DNAObject>>([]);
+  const [searchResult, setSearchResult] = useState<Array<DNARow>>([]);
   // By giving this to the provider, consumers can also update the context.
-  const setResult = (results: Array<DNAObject>) => setSearchResult(results);
+  const setResult = (results: Array<DNARow>) => setSearchResult(results);
 
   return (
     <Page>

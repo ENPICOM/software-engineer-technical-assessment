@@ -1,4 +1,4 @@
-export interface DNAObject {
+export interface DNARow {
   id: number;
   dna_string: string;
   created: string;
@@ -7,7 +7,7 @@ export interface DNAObject {
 
 export interface ApiResponse {
   errors?: any;
-  result: Array<DNAObject>;
+  result: Array<DNARow>;
 }
 
 export interface ApiSearchParams {
