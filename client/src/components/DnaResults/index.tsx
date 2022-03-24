@@ -80,6 +80,7 @@ const Base = styled.div<BaseProps>`
 
 const DnaResults = () => {
   const { result } = useContext(DnaContext);
+
   return (
     <SearchResultWrapper>
       <Header>

@@ -105,11 +105,22 @@ const InputControls = () => {
     message: "",
   });
 
+  // Simple function to set an error state. Reduces code
+  const setErrorState = (message: string) => {
+    setInputState((prev) => ({
+      ...prev,
+      success: false,
+      error: true,
+      createEnabled: false,
+      message,
+    }));
+  };
+
   // Handler for the query text input field
   const queryInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value;
 
-    setInputState((prev) => ({ ...prev, success: false, query }));
+    setInputState((prev) => ({ ...prev, success: false, error: false, message: "", query }));
 
     // Empty queries are not allowed and will clear the result list
     if (query === "") {
@@ -151,13 +162,7 @@ const InputControls = () => {
       })
       .catch((_) => {
         // Set local state in error state
-        setInputState((prev) => ({
-          ...prev,
-          success: false,
-          error: true,
-          createEnabled: false,
-          message: "Your input is invalid",
-        }));
+        setErrorState("Your input is invalid");
 
         // Clear the context
         setResult([]);
@@ -188,12 +193,7 @@ const InputControls = () => {
       })
       .catch((_) => {
         // Set local state in error state
-        setInputState((prev) => ({
-          ...prev,
-          error: true,
-          success: false,
-          message: "Failed to insert this DNA string into the database",
-        }));
+        setErrorState("Failed to insert this DNA string into the database");
       });
   };
 
