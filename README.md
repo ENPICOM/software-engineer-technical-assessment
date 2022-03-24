@@ -57,3 +57,14 @@ NOTE: This command currently spawns the database docker container to make data a
 
 Suppose you had to turn the above components into a production web application consumed by many concurrent users and
 handling large volumes of data. What would you have to change/improve in order to achieve that?
+
+### Answer
+
+- This assignment is of course limited in execution. The Levenshtein extension of Postgres only allows source and match strings of 255 characters, which in reality doesn't make sense for DNA sequences.
+- Ideally DNA sequences are first compressed by an algorithm to reduce size. A hash should also be calculated to easily identify duplicate entries.
+- While Postgres is great, raw DNA sequences could also be put in a NoSQL DB like Dynamo. Perhaps even chunked per 1,000 parts.
+- Adding DNA sequences one by one is of course insufficient. Data ingestion, depending on the scenario, would be done by batch file import.
+- Fuzzy string match probably isn't the only operation you want to execute on the data. More computations are probably needed.
+- It would be advisable to maintain a headless architecture and seperate all elements. Frontend <-> Gateway (Auth/Route/etc) <-> Services(+) <-> DB(+)
+- If, following the context of this example application, functionality is read-intensive, a (Redis) caching layer could also be put in front of the DB to speed up common queries.
+- Depending on the load (concurrent connections / computational effort), kubernetes could be used the scale the various layers.
