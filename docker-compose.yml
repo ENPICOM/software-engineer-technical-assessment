@@ -1,6 +1,5 @@
-version: '3.8'
+version: "3.8"
 services:
-
   server:
     depends_on:
       - database
@@ -26,6 +25,8 @@ services:
       - ./client:/client
     ports:
       - 3000:3000
+    environment:
+      - CHOKIDAR_USEPOLLING=true
 
   database:
     image: postgres:13-alpine
@@ -36,7 +37,7 @@ services:
       POSTGRES_USER: enpicom
       POSTGRES_PASSWORD: enpicom
     volumes:
-        - db-data:/var/lib/postgresql/data
+      - db-data:/var/lib/postgresql/data
 
 volumes:
-    db-data:
+  db-data:
