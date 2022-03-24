@@ -44,7 +44,7 @@ const DnaWrapper = styled.div`
   }
 `;
 
-const DnaString = styled.div`
+const DnaSequence = styled.div`
   display: flex;
   flex: 1;
   min-height: 20px;
@@ -90,13 +90,13 @@ const DnaResults = () => {
         .sort((a, b) => (a.distance && b.distance ? a.distance - b.distance : 0))
         .map((row, i) => (
           <DnaWrapper key={`${row.id}`}>
-            <DnaString key={`${row}-${i}`}>
-              {Array.from(row.dna_string).map((base, i) => (
+            <DnaSequence key={`${row}-${i}`}>
+              {Array.from(row.dna_sequence).map((base, i) => (
                 <Base key={`base-${i}`} base={base}>
                   {base}
                 </Base>
               ))}
-            </DnaString>
+            </DnaSequence>
             <span>{row.distance}</span>
           </DnaWrapper>
         ))}

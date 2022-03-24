@@ -11,14 +11,14 @@ describe("Check API endpoints", () => {
     const exampleString = "ACTGGGTGGTATTCATCT";
 
     await request(app)
-      .post("/dna/create")
-      .send({ dna_string: exampleString })
+      .post("/dna/sequences")
+      .send({ sequence: exampleString })
       .set("Accept", "application/json")
       .expect("Content-Type", /json/)
       .expect(200)
       .then((response) => {
         expect(typeof response.body.result[0].id).toBe("number");
-        expect(response.body.result[0].dna_string).toBe(exampleString);
+        expect(response.body.result[0].dna_sequence).toBe(exampleString);
       });
   });
 
@@ -26,8 +26,8 @@ describe("Check API endpoints", () => {
     const exampleString = "PIPTEQQ";
 
     await request(app)
-      .post("/dna/create")
-      .send({ dna_string: exampleString })
+      .post("/dna/sequences")
+      .send({ sequence: exampleString })
       .set("Accept", "application/json")
       .expect("Content-Type", /json/)
       .expect(400);
@@ -37,7 +37,7 @@ describe("Check API endpoints", () => {
     const searchQuery = "ACT";
 
     await request(app)
-      .get(`/dna/search?query=${searchQuery}`)
+      .get(`/dna/sequences?query=${searchQuery}`)
       .set("Accept", "application/json")
       .expect("Content-Type", /json/)
       .expect(200)

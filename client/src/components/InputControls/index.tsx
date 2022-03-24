@@ -142,7 +142,7 @@ const InputControls = () => {
           ...prev,
           error: false,
           success: false,
-          createEnabled: result.filter((row) => row.dna_string === query).length === 0,
+          createEnabled: result.filter((row) => row.dna_sequence === query).length === 0,
           message: `Found ${result.length} results`,
         }));
 

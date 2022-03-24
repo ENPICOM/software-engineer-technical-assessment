@@ -10,7 +10,7 @@ const app = express();
 app.use(express.json());
 
 app.get(
-  "/dna/search",
+  "/dna/sequences",
   query("query")
     .exists()
     .matches(new RegExp(/^[ACTG]{1,255}$/)),
@@ -30,12 +30,12 @@ app.get(
       if (distance) {
         result = await db.query(
           // Also return the distance as a int so we can sort in the frontend
-          `SELECT *, levenshtein (dna_string, $1) as distance FROM dna WHERE levenshtein (dna_string, $1) <= $2`,
+          `SELECT *, levenshtein (dna_sequence, $1) as distance FROM dna WHERE levenshtein (dna_sequence, $1) <= $2`,
           [searchQuery, distance]
         );
       } else {
         // Exact matches seem kinda silly so we do a LIKE search for the given query
-        result = await db.query(`SELECT * FROM dna WHERE dna_string LIKE $1`, [
+        result = await db.query(`SELECT * FROM dna WHERE dna_sequence LIKE $1`, [
           "%" + searchQuery + "%",
         ]);
       }
@@ -51,16 +51,16 @@ app.get(
 );
 
 app.post(
-  "/dna/create",
-  body("dna_string").exists().matches(new RegExp("^[ACTG]{2,255}$")),
+  "/dna/sequences",
+  body("sequence").exists().matches(new RegExp("^[ACTG]{2,255}$")),
   async (req, res) => {
     try {
       // If the validation rules fail, exit
       validationResult(req).throw();
 
       const result = await db.query(
-        `INSERT INTO dna (dna_string) VALUES ($1) RETURNING id, dna_string, created`,
-        [req.body!.dna_string]
+        `INSERT INTO dna (dna_sequence) VALUES ($1) RETURNING id, dna_sequence, created`,
+        [req.body!.sequence]
       );
 
       // This will only return one row, the entry we just added

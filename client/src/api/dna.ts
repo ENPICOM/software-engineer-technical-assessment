@@ -1,6 +1,6 @@
 export interface DNARow {
   id: number;
-  dna_string: string;
+  dna_sequence: string;
   created: string;
   distance?: number;
 }
@@ -24,7 +24,7 @@ export interface ApiSearchParams {
 const searchDna = (query: string, distance?: string): Promise<ApiResponse> => {
   const params: ApiSearchParams = { query };
   distance && (params.distance = distance);
-  return fetch(`/dna/search?${new URLSearchParams(params)}`, {
+  return fetch(`/dna/sequences?${new URLSearchParams(params)}`, {
     method: "get",
     headers: { "Content-Type": "application/json" },
   }).then((res) => res.json());
@@ -33,14 +33,14 @@ const searchDna = (query: string, distance?: string): Promise<ApiResponse> => {
 /**
  * Function createDNA
  *
- * @param {string} dnaString
+ * @param {string} sequence
  * @return {*}  {Promise<ApiResponse>}
  */
-const createDna = (dnaString: string): Promise<ApiResponse> => {
-  return fetch(`/dna/create`, {
+const createDna = (sequence: string): Promise<ApiResponse> => {
+  return fetch(`/dna/sequences`, {
     method: "post",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ dna_string: dnaString }),
+    body: JSON.stringify({ sequence }),
   }).then((res) => res.json());
 };
 

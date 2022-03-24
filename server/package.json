@@ -1,7 +1,6 @@
 {
   "scripts": {
     "start": "ts-node-dev --poll --respawn --transpile-only src/index.ts",
-    "prod": "tsc && node ./dist/index.js",
     "test": "docker-compose up -d database && jest --config jest.config.js && docker-compose down"
   },
   "devDependencies": {
