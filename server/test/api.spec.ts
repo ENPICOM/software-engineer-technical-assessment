@@ -6,18 +6,19 @@ describe("Check API endpoints", () => {
     jest.clearAllMocks();
   });
 
+  // TODO: This can only now run once. Entry should be deleted afterwards to allow testing again
   it("checks the create endpoint with valid input", async () => {
-    const exampleString = "ACTGGGTG";
+    const exampleString = "ACTGGGTGGTATTCATCT";
 
     await request(app)
-      .post("/api/create")
+      .post("/dna/create")
       .send({ dna_string: exampleString })
       .set("Accept", "application/json")
       .expect("Content-Type", /json/)
       .expect(200)
       .then((response) => {
-        expect(typeof response.body.result.id).toBe("number");
-        expect(response.body.result.dna_string).toBe(exampleString);
+        expect(typeof response.body.result[0].id).toBe("number");
+        expect(response.body.result[0].dna_string).toBe(exampleString);
       });
   });
 
@@ -25,7 +26,7 @@ describe("Check API endpoints", () => {
     const exampleString = "PIPTEQQ";
 
     await request(app)
-      .post("/api/create")
+      .post("/dna/create")
       .send({ dna_string: exampleString })
       .set("Accept", "application/json")
       .expect("Content-Type", /json/)
@@ -36,7 +37,7 @@ describe("Check API endpoints", () => {
     const searchQuery = "ACT";
 
     await request(app)
-      .get(`/api/search?query=${searchQuery}`)
+      .get(`/dna/search?query=${searchQuery}`)
       .set("Accept", "application/json")
       .expect("Content-Type", /json/)
       .expect(200)
