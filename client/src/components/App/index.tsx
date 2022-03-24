@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import SearchInput from "../SearchInput";
-import SearchResults from "../SearchResults";
+import SearchInput from "../InputControls";
+import SearchResults from "../DnaResults";
 import pattern from "../../assets/pattern.svg";
 import { DNAObject } from "../../api/dna";
 
-interface SearchResultContext {
+interface DnaResultContext {
   result: Array<DNAObject>;
   setResult: (r: Array<DNAObject>) => void;
 }
@@ -31,18 +31,25 @@ const MainContainer = styled.div`
   filter: drop-shadow(10px 10px 15rem #979797);
 `;
 
-export const SearchContext = React.createContext<SearchResultContext>({
+/**
+ * We can use a state management system, but to keep it lean and mean, we just utilize ReactContext to share data between components
+ */
+export const DnaContext = React.createContext<DnaResultContext>({
   result: [],
   setResult: () => {},
 });
 
+/**
+ *  Main App component
+ */
 const App = () => {
   const [searchResult, setSearchResult] = useState<Array<DNAObject>>([]);
+  // By giving this to the provider, consumers can also update the context.
   const setResult = (results: Array<DNAObject>) => setSearchResult(results);
 
   return (
     <Page>
-      <SearchContext.Provider
+      <DnaContext.Provider
         value={{
           result: searchResult,
           setResult,
@@ -52,7 +59,7 @@ const App = () => {
           <SearchInput />
           <SearchResults />
         </MainContainer>
-      </SearchContext.Provider>
+      </DnaContext.Provider>
     </Page>
   );
 };

@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import styled from "styled-components";
-import { SearchContext } from "../App";
+import { DnaContext } from "../App";
 import api from "../../api/dna";
 
 interface InputStatusProps {
@@ -22,19 +22,20 @@ const BarWrapper = styled.div`
 
 const InputQuery = styled.input<InputStatusProps>`
   box-sizing: border-box;
+  width: 100%;
+  height: 3rem;
+  padding: 10px;
   border: 1px solid ${(props) => (props.isError ? "red" : props.isSuccess ? "#4caf50" : "#3a53a4")};
   border-radius: 10px;
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
-  width: 100%;
-  height: 3rem;
   font-size: 15px;
-  padding: 10px;
 
   background: #4040400a;
   ::placeholder {
     color: #e32327;
   }
+
   :focus {
     outline: 2px solid
       ${(props) => (props.isError ? "red" : props.isSuccess ? "#4caf50" : "#3a53a4")};
@@ -44,19 +45,21 @@ const InputQuery = styled.input<InputStatusProps>`
 
 const InputDistance = styled.input<InputStatusProps>`
   box-sizing: border-box;
+  width: 7rem;
+  height: 3rem;
+  padding: 10px;
   border: 1px solid ${(props) => (props.isError ? "red" : props.isSuccess ? "#4caf50" : "#3a53a4")};
   border-left: 0;
   ${(props) => (!props.createEnabled ? "border-top-right-radius: 10px;" : "")};
   ${(props) => (!props.createEnabled ? "border-bottom-right-radius: 10px;" : "")};
-  width: 7rem;
-  height: 3rem;
   font-size: 15px;
-  padding: 10px;
+  transition: all 0.5s ease-in-out;
 
   background: #4040400a;
   ::placeholder {
     color: #e32327;
   }
+
   :focus {
     outline: 2px solid
       ${(props) => (props.isError ? "red" : props.isSuccess ? "#4caf50" : "#3a53a4")};
@@ -69,15 +72,18 @@ const CreateButton = styled.div<InputStatusProps>`
   justify-content: center;
   align-items: center;
   height: 3rem;
-  width: 7rem;
   box-sizing: border-box;
   border-top-right-radius: 10px;
   border-bottom-right-radius: 10px;
-  border-left: 0;
   border: 1px solid ${(props) => (props.isError ? "red" : "#3a53a4")};
+  border-left: 0;
+  width: ${(props) => (props.createEnabled ? "7rem" : "0")};
+  color: ${(props) => (props.createEnabled ? "inherit" : "transparent")};
+  ${(props) => (!props.createEnabled ? "border: none;" : "")};
   background: #4040400a;
   cursor: pointer;
   font-weight: 600;
+  transition: all 0.5s ease-in-out;
 `;
 
 const Notification = styled.div<InputStatusProps>`
@@ -85,9 +91,11 @@ const Notification = styled.div<InputStatusProps>`
   color: ${(props) => (props.isError ? "red" : props.isSuccess ? "#4caf50" : "")};
 `;
 
-const SearchInput = () => {
-  const { setResult } = useContext(SearchContext);
+const InputControls = () => {
+  // Retrieve the context
+  const { setResult } = useContext(DnaContext);
 
+  // Create a state object for local use
   const [inputState, setInputState] = useState({
     error: false,
     success: false,
@@ -97,18 +105,21 @@ const SearchInput = () => {
     message: "",
   });
 
+  // Handler for the query text input field
   const queryInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value;
 
+    setInputState((prev) => ({ ...prev, success: false, query }));
+
+    // Empty queries are not allowed and will clear the result list
     if (query === "") {
       setResult([]);
     } else {
       queryDna(query, inputState.distance);
     }
-
-    setInputState((prev) => ({ ...prev, query }));
   };
 
+  // Handler for the distance number input field
   const distanceInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const distance = e.target.value;
 
@@ -116,21 +127,17 @@ const SearchInput = () => {
     queryDna(inputState.query, distance);
   };
 
+  // Function that fires the query via an api method
   const queryDna = (query: string, distance?: string) => {
     api
       .searchDna(query, distance)
       .then(({ errors, result }) => {
+        // If we have an error object, the call failed for some reason, so abort
         if (errors) {
-          setInputState((prev) => ({
-            ...prev,
-            success: false,
-            error: true,
-            createEnabled: false,
-            message: " Your input is invalid",
-          }));
-          setResult([]);
           throw new Error(errors);
         }
+
+        // Update the local state
         setInputState((prev) => ({
           ...prev,
           error: false,
@@ -138,24 +145,36 @@ const SearchInput = () => {
           createEnabled: result.filter((row) => row.dna_string === query).length === 0,
           message: `Found ${result.length} results`,
         }));
-        result && setResult(result);
+
+        // Insert the search results into the context;
+        setResult(result);
       })
-      .catch(console.error);
+      .catch((e) => {
+        // Set local state in error state
+        setInputState((prev) => ({
+          ...prev,
+          success: false,
+          error: true,
+          createEnabled: false,
+          message: "Your input is invalid",
+        }));
+
+        // Clear the context
+        setResult([]);
+      });
   };
 
+  // Function that fires the create request via an api method
   const createDna = () => {
     api
       .createDna(inputState.query)
       .then(({ errors, result }) => {
+        // If we have an error object, the call failed for some reason, so abort
         if (errors) {
-          setInputState((prev) => ({
-            ...prev,
-            error: true,
-            success: false,
-            message: "Failed to insert this DNA string into the database",
-          }));
           throw new Error(errors);
         }
+
+        // Update the local state
         setInputState((prev) => ({
           ...prev,
           success: true,
@@ -163,9 +182,19 @@ const SearchInput = () => {
           createEnabled: false,
           message: `Inserted one DNA string`,
         }));
-        result && setResult(result);
+
+        // On successful insert, we get the inserted object back. Replace context with this so we get visual feedback
+        setResult(result);
       })
-      .catch(console.error);
+      .catch((_) => {
+        // Set local state in error state
+        setInputState((prev) => ({
+          ...prev,
+          error: true,
+          success: false,
+          message: "Failed to insert this DNA string into the database",
+        }));
+      });
   };
 
   return (
@@ -173,28 +202,37 @@ const SearchInput = () => {
       <BarWrapper>
         <InputQuery
           type="text"
+          aria-label="query-input"
+          placeholder="Type a query..."
           isSuccess={inputState.success}
           isError={inputState.error}
-          placeholder="Type a query..."
           onChange={queryInputHandler}
         />
         <InputDistance
           type="number"
-          createEnabled={inputState.createEnabled}
+          aria-label="distance-input"
           placeholder="Distance"
+          createEnabled={inputState.createEnabled}
           onChange={distanceInputHandler}
         />
-        {inputState.createEnabled && (
-          <CreateButton isError={inputState.error} onClick={createDna}>
-            Create
-          </CreateButton>
-        )}
+        <CreateButton
+          aria-label="create-input"
+          createEnabled={inputState.createEnabled}
+          isError={inputState.error}
+          onClick={createDna}
+        >
+          Create
+        </CreateButton>
       </BarWrapper>
-      <Notification isSuccess={inputState.success} isError={inputState.error}>
+      <Notification
+        aria-label="input-notification"
+        isSuccess={inputState.success}
+        isError={inputState.error}
+      >
         {inputState.message}
       </Notification>
     </InputWrapper>
   );
 };
 
-export default SearchInput;
+export default InputControls;

@@ -1,39 +1,39 @@
 import { useContext } from "react";
 import styled from "styled-components";
-import { SearchContext } from "../App";
+import { DnaContext } from "../App";
 
 interface BaseProps {
   base: string;
 }
 
 const SearchResultWrapper = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
-  margin-top: 4rem;
-  position: relative;
   width: 100%;
   height: calc(100% - 8rem);
+  margin-top: 4rem;
   overflow-y: scroll;
 
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
   ::-webkit-scrollbar {
     display: none;
   }
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
 `;
 
 const Header = styled.div`
   display: flex;
-  width: 100%;
   justify-content: space-between;
+  width: 100%;
+  margin-bottom: 1rem;
   font-size: 18px;
   font-weight: 600;
-  margin-bottom: 1rem;
 `;
 
 const DnaWrapper = styled.div`
   display: flex;
-  width: 100%;
+  width: calc(100% - 2rem);
 
   span {
     display: flex;
@@ -62,6 +62,7 @@ const Base = styled.div<BaseProps>`
   width: 20px;
   height: 20px;
   flex-shrink: 0;
+
   ${(props) => {
     switch (props.base) {
       case "T":
@@ -77,8 +78,8 @@ const Base = styled.div<BaseProps>`
   }};
 `;
 
-const SearchResults = () => {
-  const { result } = useContext(SearchContext);
+const DnaResults = () => {
+  const { result } = useContext(DnaContext);
   return (
     <SearchResultWrapper>
       <Header>
@@ -88,10 +89,12 @@ const SearchResults = () => {
       {result
         .sort((a, b) => (a.distance && b.distance ? a.distance - b.distance : 0))
         .map((row, i) => (
-          <DnaWrapper>
+          <DnaWrapper key={`${row.id}`}>
             <DnaString key={`${row}-${i}`}>
-              {Array.from(row.dna_string).map((base) => (
-                <Base base={base}>{base}</Base>
+              {Array.from(row.dna_string).map((base, i) => (
+                <Base key={`base-${i}`} base={base}>
+                  {base}
+                </Base>
               ))}
             </DnaString>
             <span>{row.distance}</span>
@@ -101,4 +104,4 @@ const SearchResults = () => {
   );
 };
 
-export default SearchResults;
+export default DnaResults;
