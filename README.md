@@ -31,11 +31,12 @@ through their browser.
 ## Result
 
 In this repo you find the implementation of the above brief. It is a DNA browser which easily allows you to search DNA strings and add them when they do not exist in the database:
+
 ![dna browser](./images/screenshot.png)
 
 ### How to run
 
-1. First, install the dependencies `npm --prefix client ci` && `npm --prefix client ci`
+1. First, install the dependencies `npm --prefix client ci` && `npm --prefix server ci`
 
 #### Prod
 
