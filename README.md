@@ -35,21 +35,31 @@ In this repo you find the implementation of the above brief. It is a DNA browser
 
 ### How to run
 
-1. `docker-compose up`
-2. Wait some time (react-scripts is far from optimized, especially in dev)
-3. Go to http://localhost:3000/
+1. First, install the dependencies `npm --prefix client ci` && `npm --prefix client ci`
+
+#### Prod
+
+2. Build the react frontend `npm --prefix client run build`
+3. Run `docker-compose -f docker-compose.prod.yml up`
+4. Go to http://localhost:3001/
+5. `docker-compose -f docker-compose.prod.yml down` when you're done
+
+#### Dev
+
+2. Run `docker-compose -f docker-compose.dev.yml up`
+3. Wait some time (development is quite slow with react-scripts)
+4. Go to http://localhost:3000/
+5. `docker-compose -f docker-compose.dev.yml down` when you're done
 
 ### Run Tests for the React frontend
 
-1. `cd ./client/`
-2. `yarn test`
+1. `npm --prefix client run test`
 
 NOTE: This command currently just spawns the db and server docker containers to make the api available. In the future, API calls can best be mocked.
 
 ### Run Tests for the NodeJS backend
 
-1. `cd ./server/`
-2. `yarn test`
+1. `npm --prefix server run test`
 
 NOTE: This command currently spawns the database docker container to make data available. In the future, a db can best be mocked.
 

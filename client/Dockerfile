@@ -2,11 +2,10 @@ FROM node:16-slim
 
 WORKDIR /client
 
-COPY package.json ./
-COPY yarn.lock ./
+COPY package*.json ./
 
-RUN yarn
+RUN npm ci
 
 COPY . .
 
-CMD yarn start
+CMD npm run start

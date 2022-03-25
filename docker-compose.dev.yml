@@ -5,6 +5,7 @@ services:
       - database
     build:
       context: ./server
+    command: dev
     volumes:
       - ./server:/server
     ports:

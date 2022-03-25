@@ -2,11 +2,10 @@ FROM node:16-slim
 
 WORKDIR /server
 
-COPY package.json ./
-COPY yarn.lock ./
+COPY package*.json ./
 
-RUN yarn
+RUN npm ci
 
 COPY . .
 
-CMD yarn start
+ENTRYPOINT ["npm","run"]

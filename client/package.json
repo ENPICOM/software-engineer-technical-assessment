@@ -22,8 +22,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "docker-compose up -d database server && react-scripts test --testURL=http://localhost:3001 && docker-compose down"
+    "build": "react-scripts build && mv build ../server/react",
+    "test": "docker-compose -f ../docker-compose.prod.yml up -d database server && react-scripts test --testURL=http://localhost:3001 && docker-compose -f ../docker-compose.prod.yml down"
   },
   "eslintConfig": {
     "extends": [

@@ -6,8 +6,12 @@ import { QueryResult } from "pg";
 const { PORT, NODE_ENV } = process.env;
 
 const app = express();
-
 app.use(express.json());
+
+// Serve static build of the react frontend in production
+if (NODE_ENV === "production") {
+  app.use("/", express.static(`./react`));
+}
 
 app.get(
   "/dna/sequences",
@@ -74,7 +78,7 @@ app.post(
 // For now: disable open handle when running jest supertest mock
 if (NODE_ENV !== "test") {
   app.listen(+(PORT ?? 8000), "0.0.0.0", () => {
-    console.log(`DNA API listening on port ${PORT}`);
+    console.log(`DNA API in ${NODE_ENV} mode listening on port ${PORT}`);
   });
 }
 

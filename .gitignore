@@ -82,6 +82,9 @@ web_modules/
 .nuxt
 dist
 
+# React frontend build folder
+react
+
 # Gatsby files
 .cache/
 # Comment in the public line in if your project uses Gatsby and not Next.js
