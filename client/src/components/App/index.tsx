@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import SearchInput from "../InputControls";
-import SearchResults from "../DnaResults";
+import InputControls from "../InputControls";
+import DnaResults from "../DnaResults";
 import pattern from "../../assets/pattern.svg";
 import { DNARow } from "../../api/dna";
 
@@ -56,8 +56,8 @@ const App = () => {
         }}
       >
         <MainContainer>
-          <SearchInput />
-          <SearchResults />
+          <InputControls />
+          <DnaResults />
         </MainContainer>
       </DnaContext.Provider>
     </Page>
