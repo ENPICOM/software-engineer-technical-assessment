@@ -78,6 +78,7 @@ const CreateButton = styled.div<InputStatusProps>`
   border: 1px solid ${(props) => (props.isError ? "red" : "#3a53a4")};
   border-left: 0;
   width: ${(props) => (props.createEnabled ? "7rem" : "0")};
+  visibility: ${(props) => (props.createEnabled ? "visible" : "hidden")};
   color: ${(props) => (props.createEnabled ? "inherit" : "transparent")};
   ${(props) => (!props.createEnabled ? "border: none;" : "")};
   background: #4040400a;
