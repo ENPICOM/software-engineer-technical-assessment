@@ -13,6 +13,7 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
+    "useDefineForClassFields": true,
     "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
@@ -20,6 +21,7 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
+  "typeAcquisition": { "include": ["jest"] },
   "include": [
     "src"
   ]
