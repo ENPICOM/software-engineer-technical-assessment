@@ -91,7 +91,7 @@ const DnaResults = () => {
         .sort((a, b) => (a.distance && b.distance ? a.distance - b.distance : 0))
         .map((row, i) => (
           <DnaWrapper key={`${row.id}`}>
-            <DnaSequence key={`${row}-${i}`}>
+            <DnaSequence>
               {Array.from(row.dna_sequence).map((base, i) => (
                 <Base key={`base-${i}`} base={base}>
                   {base}
